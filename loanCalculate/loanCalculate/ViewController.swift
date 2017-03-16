@@ -8,12 +8,25 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+
+class ViewController: UIViewController{
     //拉取连接时候，control + click
     @IBOutlet weak var loanAmountField: UITextField!
     @IBOutlet weak var loanTermField: UITextField!
     @IBOutlet weak var interestRateField: UITextField!
     @IBOutlet weak var result: UILabel!
+    
+    
+    
+    /// 加一个提醒框，提醒框只能通过代码实现
+    func alert() {
+        let alertView = UIAlertController(title: "警告", message: "输入格式不正确 ❌", preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "重新输入", style: .destructive, handler: nil))
+        // 控制器的显示
+        present(alertView, animated: true, completion: nil)
+
+    }
+    
     
     @IBAction func simpleBution(_ sender: Any) {
         //实例化
@@ -30,9 +43,11 @@ class ViewController: UIViewController {
             return
         }
         guard let loanTerm = Int(loanTermField),let loanAmount = Double(loanAmountField),let interestRate = Double(interestRateField) else {
-            print("用户输入数据格式错误")
+            alert()
+//            print("用户输入数据格式错误")
             return
         }
+        
         
         // 看起来特别舒服
         result.text = calculate1.calculate(loanAmount: loanAmount, years: loanTerm, interestRate: interestRate).money
@@ -45,7 +60,18 @@ class ViewController: UIViewController {
     @IBAction func compoundButtion(_ sender: Any) {
         //复利计算 实例化
         let calculate2 = compoundCalculate()
-        result.text = calculate2.calculate(loanAmount: Double(loanAmountField.text!)!, years: Int(loanTermField.text!)!, interestRate: Double(interestRateField.text!)!).money
+        guard let loanAmount = Double(loanAmountField.text!) ,
+        let loanTerm = Int(loanTermField.text!),
+        let interesrRate = Double(interestRateField.text!)
+        else {
+           
+            let alertView = UIAlertController(title: "警告", message: "请输入数字", preferredStyle: .alert)
+            alertView.addAction(UIAlertAction(title: "重新输入", style: .destructive, handler: nil))
+            present(alertView, animated: true, completion: nil)
+            return
+        }
+        result.text = calculate2.calculate(loanAmount: loanAmount, years: loanTerm, interestRate: interesrRate).money
+//        result.text = calculate2.calculate(loanAmount: Double(loanAmountField.text!)!, years: Int(loanTermField.text!)!, interestRate: Double(interestRateField.text!)!).money
         
     }
     
@@ -55,6 +81,9 @@ class ViewController: UIViewController {
         loanAmountField.resignFirstResponder()
         loanTermField.resignFirstResponder()
         interestRateField.resignFirstResponder()
+        
+        
+
     }
     
     //guard 测试,有值为nil时才执行else，否则呢，继续往下执行， else里必须加 return
@@ -68,22 +97,28 @@ class ViewController: UIViewController {
         print(name + String(age))
     }
 
+
     //MARK:视图加载完成
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         
 //        demo(name: nil, age: 100)
 //        
 //        demo(name: "tom", age: 18)
         
-        // Do any additional setup after loading the view, typically from a nib.
+        
+
     }
     //MARK:接到内存警告
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+  
+    
     
 }
 
